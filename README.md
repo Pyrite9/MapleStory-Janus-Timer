@@ -1,24 +1,25 @@
 # MapleStory Janus Timer
 
-게임 스킬 쿨다운을 감지하고 표시하는 데스크톱 오버레이 타이머.
+메이플스토리 사냥 중 스킬 쿨다운을 눈으로 확인하기가 불편해서 직접 만든 오버레이 타이머입니다.
 
-지정한 키를 누르면 쿨다운 카운트다운이 뜨고, 끝나면 알림음이 울립니다. 일반 창과 "클릭이 통과하는 투명 오버레이"라는 두 얼굴(Janus)을 단축키로 오갈 수 있어, 게임 화면 위에 띄워둔 채로 플레이할 수 있습니다.
+`pynput`으로 키 입력을 전역에서 감지하기 때문에, 게임에 포커스가 있는 상태에서 지정한 스킬 키를 누르는 순간 타이머가 돌기 시작합니다. 쿨다운이 도는 동안 화면 위에는 남은 시간이 큼직하게 표시되고, 끝나면 알림음으로 알려줍니다. 게임 위에 투명하게 띄워둘 수 있어, 알트탭 없이 사냥에 집중한 채로 쿨타임을 관리할 수 있습니다.
 
 <!-- 스크린샷을 여기에 추가하세요 (일반 모드 / 오버레이 모드) -->
 <!-- ![일반 모드](docs/normal.png) ![오버레이 모드](docs/overlay.png) -->
 
 ## 기능
 
-- 전역 키 감지로 쿨다운 시작 (쿨다운 중 재입력은 무시)
-- 카운트다운 숫자 + 배경이 아래에서 위로 밝아지는 진행 연출
-- 완료 시 알림음 (wav / mp3, 볼륨 조절)
-- 일반 / 오버레이(투명·항상 위·클릭 통과) 모드 토글
-- 설정창에서 키·시간·크기·이미지·알림음·투명도 편집 후 즉시 반영
-- 설정은 `settings.json`에 자동 저장
+- **전역 키 감지** — 게임이 포커스를 잡고 있어도 지정한 스킬 키를 감지해 타이머를 시작합니다.
+- **쿨다운 중 재입력 무시** — 쿨이 도는 도중에 키를 또 눌러도 타이머가 리셋되지 않습니다.
+- **카운트다운 표시** — 남은 시간을 큰 숫자로 보여주고, 배경이 아래에서 위로 차오르며 진행도를 나타냅니다.
+- **완료 알림음** — 쿨다운이 끝나면 소리로 알려줍니다. (wav / mp3 지원, 볼륨 조절 가능)
+- **오버레이 모드** — 테두리 없이 투명하게, 항상 위에, 클릭이 통과하도록 게임 위에 띄웁니다. 조준이나 클릭을 방해하지 않습니다.
+- **설정창** — 트리거 키, 쿨다운 시간, 창 크기, 배경 이미지, 알림음, 투명도를 자유롭게 바꾸고 즉시 반영됩니다.
+- **설정 자동 저장** — 모든 설정과 창 위치가 저장되어 다음 실행 때 그대로 복원됩니다.
 
-## 다운로드 (실행 파일)
+## 다운로드 & 실행
 
-[Releases](../../releases)에서 최신 `JanusTimer.zip`을 받아 압축을 풀고 `JanusTimer.exe`를 실행하세요. 파이썬 설치는 필요 없습니다.
+[Releases](../../releases)에서 최신 `JanusTimer.zip`을 받아 압축을 풀고 **`JanusTimer.exe`** 를 실행하세요. 파이썬 설치는 필요 없습니다.
 
 ```
 JanusTimer.zip
@@ -27,7 +28,7 @@ JanusTimer.zip
 └─ alarm.wav        (기본 알림음)
 ```
 
-`background.png`와 `alarm.wav`는 같은 폴더에 두면 됩니다. 원하는 이미지·소리로 교체하거나, 설정창에서 다른 파일을 직접 지정할 수 있습니다.
+세 파일은 같은 폴더에 두면 됩니다. 배경 이미지와 알림음은 원하는 파일로 교체하거나, 설정창에서 다른 파일을 직접 지정할 수 있습니다.
 
 ## 조작
 
@@ -40,35 +41,20 @@ JanusTimer.zip
 
 > 오버레이 모드는 클릭이 통과하므로 마우스로 잡을 수 없습니다. 위치를 옮기거나 설정을 열려면 먼저 `Ctrl+Alt+O`로 일반 모드로 돌아오세요.
 
-## ⚠️ 관리자 권한
+처음 실행했다면 **우클릭 → 설정**에서 트리거 키부터 바꿔주세요. 기본값이 숫자 `3`이라, 그대로 두면 평소 입력과 충돌합니다.
 
-많은 게임이 관리자 권한으로 실행됩니다. 이 경우 **타이머도 관리자 권한으로 실행해야** 게임이 포커스를 잡고 있을 때 키 입력을 감지할 수 있습니다. Windows가 권한이 낮은 프로그램의 입력 후킹을 차단하기 때문이며, 코드로 우회할 수 없는 OS 차원의 정책입니다.
+## 관리자 권한
 
-게임 중 키가 감지되지 않으면 `JanusTimer.exe`를 우클릭 → **관리자 권한으로 실행**하세요. (배포된 exe가 `--uac-admin`으로 빌드된 경우 실행 시 자동으로 권한을 요청합니다.)
+많은 게임이 관리자 권한으로 실행됩니다. 이 경우 타이머도 같은 권한으로 실행되어야 게임이 포커스를 잡고 있을 때 키 입력을 감지할 수 있습니다. 권한이 낮은 프로그램의 입력 후킹을 차단하는 Windows 정책 때문이며, 코드로 우회할 수 없습니다.
 
-## 소스에서 실행
+Releases에 배포되는 실행 파일은 관리자 권한을 자동으로 요청하도록 빌드되어 있어, 실행 시 뜨는 권한 요청을 **허용**하면 됩니다. 거부하면 게임 중에 키 입력을 받아오지 못합니다.
 
-요구사항: Python 3.9+
+## 동작 환경
 
-```bash
-pip install -r requirements.txt
-python janus_timer.py
-```
-
-## 직접 빌드 (PyInstaller)
-
-```bash
-pip install pyinstaller
-```
-
-안 쓰는 거대 모듈을 제외한 빌드 명령(한 줄):
-
-```bash
-pyinstaller --onefile --windowed --uac-admin --name JanusTimer --exclude-module PySide6.QtWebEngineCore --exclude-module PySide6.QtWebEngineWidgets --exclude-module PySide6.QtWebEngineQuick --exclude-module PySide6.QtQuick --exclude-module PySide6.QtQml --exclude-module PySide6.QtQuick3D --exclude-module PySide6.QtQuickWidgets --exclude-module PySide6.Qt3DCore --exclude-module PySide6.Qt3DRender --exclude-module PySide6.Qt3DExtras --exclude-module PySide6.QtCharts --exclude-module PySide6.QtDataVisualization --exclude-module PySide6.QtPdf --exclude-module PySide6.QtPdfWidgets --exclude-module PySide6.QtSql --exclude-module PySide6.QtTest --exclude-module PySide6.QtDesigner --exclude-module PySide6.QtUiTools --exclude-module PySide6.QtBluetooth --exclude-module PySide6.QtNfc --exclude-module PySide6.QtSensors --exclude-module PySide6.QtSerialPort --exclude-module PySide6.QtPositioning --exclude-module PySide6.QtLocation --exclude-module PySide6.QtWebSockets --exclude-module PySide6.QtWebChannel --exclude-module PySide6.QtWebView janus_timer.py
-```
-
-결과물은 `dist/JanusTimer.exe`에 생성됩니다. `QtNetwork`는 알림음(QtMultimedia)이 내부적으로 참조할 수 있어 제외하지 않았습니다.
+Windows 환경을 기준으로 개발하고 테스트했습니다. 다른 OS에 대한 호환성은 별도로 확인하지 않았습니다.
 
 ## 라이선스
 
 [MIT](LICENSE)
+
+기본 첨부 효과음: [freesound.org/s/318687](https://freesound.org/s/318687/) (라이선스: Creative Commons 0)
